@@ -1,5 +1,5 @@
 let db = {
-  posts: {
+  post: {
     userName: 'user',
     body: 'post body',
     createdAt: '2019-09-16T19:23:03.060Z',
@@ -40,3 +40,11 @@ const userDetails = {
     }
   ]
 };
+const comments = [
+  {
+    userName: 'user',
+    postId: 'kdjsfgdksuufhgkdsufky',
+    body: 'nice one mate!',
+    createdAt: '2019-03-15T10:59:52.798Z'
+  }
+];
