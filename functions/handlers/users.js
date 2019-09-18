@@ -110,7 +110,32 @@ exports.addUserDetails = (req, res) => {
       return res.status(500).json({ error: err.code });
     });
 };
-
+// Get User Details
+exports.getAuthUser = (req, res) => {
+  let userData = {};
+  db.doc(`/users/${req.user.userName}`)
+    .get()
+    .then(doc => {
+      if (doc.exists) {
+        userData.credentials = doc.data();
+        return db
+          .collection('likes')
+          .where('userName', '==', req.user.userName)
+          .get();
+      }
+    })
+    .then(data => {
+      userData.likes = [];
+      data.forEach(doc => {
+        userData.likes.push(doc.data());
+      });
+      return res.json(userData);
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
 // Upload User Profile Image
 exports.uploadImage = (req, res) => {
   const Busboy = require('busboy');

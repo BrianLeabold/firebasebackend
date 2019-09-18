@@ -17,3 +17,26 @@ let db = {
     location: ''
   }
 };
+// redux data
+const userDetails = {
+  credentials: {
+    userId: '',
+    email: '',
+    userName: '',
+    createdAt: '',
+    imageURL: '',
+    bio: '',
+    website: '',
+    location: ''
+  },
+  likes: [
+    {
+      userName: '',
+      postId: ''
+    },
+    {
+      userName: '',
+      postId: ''
+    }
+  ]
+};
