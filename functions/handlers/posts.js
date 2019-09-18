@@ -67,3 +67,34 @@ exports.getPost = (req, res) => {
       console.error(err);
     });
 };
+//Comment on post
+exports.commentOnPost = (req, res) => {
+  if (req.body.body.trim() === '')
+    return res.status(400).json({ errmsg: 'Must not be empty' });
+  const newComment = {
+    body: req.body.body,
+    createdAt: new Date().toISOString(),
+    postId: req.params.postId,
+    userName: req.user.userName,
+    userImage: req.user.imageUrl
+  };
+
+  db.doc(`/posts/${req.params.postId}`)
+    .get()
+    .then(doc => {
+      if (!doc.exists) {
+        return res.status(404).json({ errmsg: 'Post not found' });
+      }
+      return doc.ref.update({ commentCount: doc.data().commentCount + 1 });
+    })
+    .then(() => {
+      return db.collection('comments').add(newComment);
+    })
+    .then(() => {
+      res.json(newComment);
+    })
+    .catch(err => {
+      res.status(500).json({ errmsg: error.code });
+      console.error(err);
+    });
+};

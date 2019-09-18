@@ -1,7 +1,12 @@
 const functions = require('firebase-functions');
 const app = require('express')();
 const cbAuth = require('./util/cbAuth');
-const { getAllPosts, createPost, getPost } = require('./handlers/posts');
+const {
+  getAllPosts,
+  createPost,
+  getPost,
+  commentOnPost
+} = require('./handlers/posts');
 const {
   signUp,
   logIn,
@@ -16,13 +21,14 @@ const {
 //Get all posts
 app.get('/posts', getAllPosts);
 //Create a single post
-app.post('/posts', cbAuth, createPost);
+app.post('/post', cbAuth, createPost);
 // Get a single post
-app.get('/posts/:postId', getPost);
+app.get('/post/:postId', getPost);
 // TODO: delete post
 // TODO: like post
 // TODO: unlike post
-// TODO: comment on post
+// Comment on post
+app.post('/post/:postId/comment', cbAuth, commentOnPost);
 //Sign-up Route
 app.post('/signup', signUp);
 //Login Route
