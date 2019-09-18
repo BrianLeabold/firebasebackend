@@ -2,7 +2,12 @@ const functions = require('firebase-functions');
 const app = require('express')();
 const cbAuth = require('./util/cbAuth');
 const { getAllPosts, createPost } = require('./handlers/posts');
-const { signUp, logIn, uploadImage } = require('./handlers/users');
+const {
+  signUp,
+  logIn,
+  uploadImage,
+  addUserDetails
+} = require('./handlers/users');
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
@@ -17,5 +22,7 @@ app.post('/signup', signUp);
 app.post('/login', logIn);
 //User Image Upload
 app.post('/user/image', cbAuth, uploadImage);
+// Add User Details
+app.post('/user', cbAuth, addUserDetails);
 
 exports.api = functions.https.onRequest(app);

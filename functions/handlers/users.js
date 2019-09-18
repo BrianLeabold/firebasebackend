@@ -2,7 +2,11 @@ const { admin, db } = require('../util/admin');
 const config = require('../util/config');
 const firebase = require('firebase');
 firebase.initializeApp(config);
-const { validateSignUp, validateLogin } = require('../util/validators');
+const {
+  validateSignUp,
+  validateLogin,
+  reduceUserDetails
+} = require('../util/validators');
 
 exports.signUp = (req, res) => {
   const newUser = {
@@ -92,6 +96,22 @@ exports.logIn = (req, res) => {
     });
 };
 
+// Add user details
+exports.addUserDetails = (req, res) => {
+  let userDetails = reduceUserDetails(req.body);
+
+  db.doc(`/users/${req.user.userName}`)
+    .update(userDetails)
+    .then(() => {
+      return res.json({ message: 'Details added successfully' });
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+// Upload User Profile Image
 exports.uploadImage = (req, res) => {
   const Busboy = require('busboy');
   const path = require('path');
