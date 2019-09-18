@@ -7,7 +7,8 @@ const {
   getPost,
   commentOnPost,
   likePost,
-  unlikePost
+  unlikePost,
+  deletePost
 } = require('./handlers/posts');
 const {
   signUp,
@@ -27,6 +28,7 @@ app.post('/post', cbAuth, createPost);
 // Get a single post
 app.get('/post/:postId', getPost);
 // TODO: delete post
+app.delete('/post/:postId', cbAuth, deletePost);
 // Like post
 app.get('/post/:postId/like', cbAuth, likePost);
 // TODO: unlike post
