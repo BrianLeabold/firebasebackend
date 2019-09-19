@@ -1,6 +1,7 @@
 const functions = require('firebase-functions');
 const app = require('express')();
 const cbAuth = require('./util/cbAuth');
+const { db } = require('./util/admin');
 const {
   getAllPosts,
   createPost,
@@ -47,3 +48,74 @@ app.post('/user', cbAuth, addUserDetails);
 app.get('/user', cbAuth, getAuthUser);
 
 exports.api = functions.https.onRequest(app);
+
+//Like Notifications
+exports.createNotifOnLike = functions.firestore
+  .document('/likes/{id}')
+  .onCreate(snapshot => {
+    db.doc(`/posts/${snapshot.data().postId}`)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          return db.doc(`/notifications/${snapshot.id}`).set({
+            createdAt: new Date().toISOString(),
+            recipient: doc.data().userName,
+            sender: snapshot.data().userName,
+            type: 'like',
+            read: false,
+            postId: doc.id
+          });
+        }
+      })
+      .then(() => {
+        return;
+      })
+      .catch(err => {
+        res.status(500).json({ errmsg: error.code });
+        console.error(err);
+        return;
+      });
+  });
+//Delete Notification(Unlike)
+exports.deleteNotifonUnlike = functions.firestore
+  .document('/likes/{id}')
+  .onDelete(snapshot => {
+    db.doc(`/notifications/${snapshot.id}`)
+      .delete()
+      .then(() => {
+        return;
+      })
+      .catch(err => {
+        res.status(500).json({ errmsg: error.code });
+        console.error(err);
+        return;
+      });
+  });
+
+//Comment Notifications
+exports.createNotifOnComment = functions.firestore
+  .document('/comments/{id}')
+  .onCreate(snapshot => {
+    db.doc(`/posts/${snapshot.data().postId}`)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          return db.doc(`/notifications/${snapshot.id}`).set({
+            createdAt: new Date().toISOString(),
+            recipient: doc.data().userName,
+            sender: snapshot.data().userName,
+            type: 'comment',
+            read: false,
+            postId: doc.id
+          });
+        }
+      })
+      .then(() => {
+        return;
+      })
+      .catch(err => {
+        res.status(500).json({ errmsg: error.code });
+        console.error(err);
+        return;
+      });
+  });
