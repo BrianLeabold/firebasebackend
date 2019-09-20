@@ -11,7 +11,10 @@ exports.getAllPosts = (req, res) => {
           postId: doc.id,
           body: doc.data().body,
           userName: doc.data().userName,
-          createdAt: doc.data().createdAt
+          createdAt: doc.data().createdAt,
+          commentCount: doc.data().commentCount,
+          likeCount: doc.data().likeCount,
+          userImage: doc.data().userImage
         });
       });
       return res.json(posts);
@@ -78,7 +81,7 @@ exports.getPost = (req, res) => {
 //Comment on post
 exports.commentOnPost = (req, res) => {
   if (req.body.body.trim() === '')
-    return res.status(400).json({ errmsg: 'Must not be empty' });
+    return res.status(400).json({ comment: 'Must not be empty' });
   const newComment = {
     body: req.body.body,
     createdAt: new Date().toISOString(),
@@ -91,7 +94,7 @@ exports.commentOnPost = (req, res) => {
     .get()
     .then(doc => {
       if (!doc.exists) {
-        return res.status(404).json({ errmsg: 'Post not found' });
+        return res.status(404).json({ comment: 'Post not found' });
       }
       return doc.ref.update({ commentCount: doc.data().commentCount + 1 });
     })
