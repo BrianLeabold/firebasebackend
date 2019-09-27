@@ -31,7 +31,7 @@ exports.createPost = (req, res) => {
   }
   const newPost = {
     body: req.body.body,
-    userName: req.user.userName,
+    userName: req.user.name,
     userImage: req.user.imageUrl,
     createdAt: new Date().toISOString(),
     likeCount: 0,
@@ -86,7 +86,7 @@ exports.commentOnPost = (req, res) => {
     body: req.body.body,
     createdAt: new Date().toISOString(),
     postId: req.params.postId,
-    userName: req.user.userName,
+    userName: req.user.name,
     userImage: req.user.imageUrl
   };
 
@@ -114,7 +114,7 @@ exports.commentOnPost = (req, res) => {
 exports.likePost = (req, res) => {
   const likeDoc = db
     .collection('likes')
-    .where('userName', '==', req.user.userName)
+    .where('userName', '==', req.user.name)
     .where('postId', '==', req.params.postId)
     .limit(1);
   const postDoc = db.doc(`/posts/${req.params.postId}`);
@@ -137,7 +137,7 @@ exports.likePost = (req, res) => {
           .collection('likes')
           .add({
             postId: req.params.postId,
-            userName: req.user.userName
+            userName: req.user.name
           })
           .then(() => {
             postData.likeCount++;
@@ -160,7 +160,7 @@ exports.likePost = (req, res) => {
 exports.unlikePost = (req, res) => {
   const likeDoc = db
     .collection('likes')
-    .where('userName', '==', req.user.userName)
+    .where('userName', '==', req.user.name)
     .where('postId', '==', req.params.postId)
     .limit(1);
   const postDoc = db.doc(`/posts/${req.params.postId}`);
@@ -208,7 +208,7 @@ exports.deletePost = (req, res) => {
       if (!doc.exists) {
         return res.status(404).json({ error: 'Post not found' });
       }
-      if (doc.data().userName !== req.user.userName) {
+      if (doc.data().userName !== req.user.name) {
         return res.status(403).json({ error: 'Unauthorized' });
       } else {
         return document.delete();

@@ -20,7 +20,7 @@ exports.validateSignUp = data => {
   if (isEmpty(data.password)) errors.password = 'Field can not be blank';
   if (data.password !== data.confirmPassword)
     errors.confirmPassword = 'Passwords do not match';
-  if (isEmpty(data.userName)) errors.userName = 'Field can not be blank';
+  if (isEmpty(data.name)) errors.name = 'Field can not be blank';
 
   return { errors, valid: Object.keys(errors).length === 0 ? true : false };
 };

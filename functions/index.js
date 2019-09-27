@@ -49,7 +49,7 @@ app.post('/user', cbAuth, addUserDetails);
 // Get our own User details
 app.get('/user', cbAuth, getAuthUser);
 // Get User details
-app.get('/user/:userName', getUserDetails);
+app.get('/user/:name', getUserDetails);
 
 app.post('/notifications', cbAuth, markNotifsRead);
 
@@ -129,7 +129,7 @@ exports.onUserImageChange = functions.firestore
       let batch = db.batch();
       return db
         .collection('posts')
-        .where('userName', '==', change.before.data().userName)
+        .where('userName', '==', change.before.data().name)
         .get()
         .then(data => {
           data.forEach(doc => {
